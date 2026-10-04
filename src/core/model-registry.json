@@ -1,0 +1,64 @@
+{
+  "$schema": "./manifest.schema.json",
+  "version": "1.0.0",
+  "models": {
+    "image.sieve.ft1.int8": {
+      "id": "image.sieve.ft1.int8",
+      "modality": "image",
+      "revision": "2026-10-03.1",
+      "license": "MIT",
+      "source": "KabirAcharya/waterspy-sieve-ft1-int8",
+      "runtimes": ["wasm", "node-cpu"],
+      "dtype": "int8",
+      "artifact": {
+        "url": "https://huggingface.co/KabirAcharya/waterspy-sieve-ft1-int8/resolve/main/sieve-int8s.onnx",
+        "sizeBytes": 23830735,
+        "sha256": "0d6e0c52e1187aa68f54ce7e185c4bf4c5bb214889f937628ab9d0a4e9fc96b0"
+      },
+      "input": {
+        "width": 384,
+        "height": 384,
+        "channels": 3,
+        "layout": "NCHW",
+        "resizeShorterSide": 440,
+        "mean": [0.485, 0.456, 0.406],
+        "std": [0.229, 0.224, 0.225]
+      },
+      "output": {
+        "type": "single_logit",
+        "aiLabel": "ai"
+      },
+      "threshold": 0.65,
+      "calibration": {
+        "method": "platt",
+        "a": 1.0,
+        "b": 0.2
+      }
+    },
+    "text.distilbert.int8": {
+      "id": "text.distilbert.int8",
+      "modality": "text",
+      "revision": "2026-10-03.1",
+      "license": "MIT",
+      "source": "bsgcasa/ai-text-detector-distilbert",
+      "runtimes": ["wasm", "node-cpu"],
+      "dtype": "int8",
+      "artifact": {
+        "url": "https://huggingface.co/bsgcasa/ai-text-detector-distilbert/resolve/main/model_int8.onnx",
+        "sizeBytes": 67395126,
+        "sha256": "28273c934ba800bb63346db125ecc0b7ed859e586ef9440b76585cc158c8a4d8"
+      },
+      "tokenizer": {
+        "url": "https://huggingface.co/bsgcasa/ai-text-detector-distilbert/resolve/main/tokenizer.json"
+      },
+      "input": {
+        "maxTokens": 512
+      },
+      "threshold": 0.5,
+      "calibration": {
+        "method": "temperature",
+        "temperature": 1.0
+      }
+    }
+  }
+}

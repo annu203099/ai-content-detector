@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Content Detector SDK — Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(22, 30, 49, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      --ai-color: #f43f5e;
+      --ai-glow: rgba(244, 63, 94, 0.3);
+      --human-color: #10b981;
+      --human-glow: rgba(16, 185, 129, 0.3);
+      --warn-color: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .brand span {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .runtime-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--human-color);
+      box-shadow: 0 0 8px var(--human-color);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 25px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: rgba(11, 15, 25, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .meta-counts {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 15px;
+    }
+
+    .sample-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sample-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .btn-primary {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Image Drop Area */
+    .drop-zone {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(11, 15, 25, 0.4);
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .preview-container {
+      margin-top: 15px;
+      display: none;
+      align-items: center;
+      gap: 15px;
+      background: rgba(11, 15, 25, 0.5);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .preview-img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* Results */
+    .results-card {
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .verdict-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .verdict-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .verdict-ai {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid var(--ai-color);
+      color: var(--ai-color);
+      box-shadow: 0 0 15px var(--ai-glow);
+    }
+
+    .verdict-human {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--human-color);
+      color: var(--human-color);
+      box-shadow: 0 0 15px var(--human-glow);
+    }
+
+    .verdict-uncertain {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--warn-color);
+      color: var(--warn-color);
+    }
+
+    .meter-container {
+      margin: 20px 0;
+    }
+
+    .meter-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .meter-bar {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .stat-pill .val {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .stat-pill .lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .warning-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--warn-color);
+      color: #fbbf24;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo-badge">⚡</div>
+        <div>
+          <h1>AI Content Detector SDK</h1>
+          <span>Multimodal Screening Engine • Sieve + DistilBERT + C2PA</span>
+        </div>
+      </div>
+      <div class="runtime-badge">
+        <div class="status-dot"></div>
+        <span id="runtimeTag">Node-CPU • V1.0.0</span>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="textTabBtn" onclick="switchTab('text')">
+        📝 Text Detection
+      </button>
+      <button class="tab-btn" id="imageTabBtn" onclick="switchTab('image')">
+        🖼️ Image Detection
+      </button>
+    </div>
+
+    <!-- TEXT PANEL -->
+    <div id="textPanel">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted);">ENTER OR PASTE TEXT TO ANALYZE</label>
+          <div style="display:flex; gap: 8px;">
+            <button class="sample-btn" onclick="loadSample('ai')">Sample AI Text</button>
+            <button class="sample-btn" onclick="loadSample('human')">Sample Human Text</button>
+          </div>
+        </div>
+        <textarea id="inputText" placeholder="Paste essay, article, or message here..." oninput="updateTextCounts()"></textarea>
+        <div class="actions-bar">
+          <div class="meta-counts">
+            <span id="wordCount">0 words</span>
+            <span id="charCount">0 characters</span>
+          </div>
+        </div>
+        <button id="analyzeTextBtn" class="btn-primary" onclick="analyzeText()">
+          <span>Analyze Text</span>
+        </button>
+      </div>
+
+      <!-- TEXT RESULTS CARD -->
+      <div id="textResultCard" class="card results-card">
+        <div class="verdict-header">
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">CLASSIFICATION VERDICT</div>
+            <div id="textVerdictBadge" class="verdict-badge"></div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">CALIBRATED CONFIDENCE</div>
+            <div id="textScoreDisplay" style="font-size: 24px; font-weight: 800;"></div>
+          </div>
+        </div>
+
+        <div class="meter-container">
+          <div class="meter-labels">
+            <span>Human-Created</span>
+            <span id="thresholdMarker">Threshold: 50%</span>
+            <span>AI-Generated</span>
+          </div>
+          <div class="meter-bar">
+            <div id="textMeterFill" class="meter-fill"></div>
+          </div>
+        </div>
+
+        <div id="textWarning" class="warning-banner" style="display:none;"></div>
+
+        <div class="stats-grid">
+          <div class="stat-pill">
+            <div id="statPerplexity" class="val">-</div>
+            <div class="lbl">Perplexity Proxy</div>
+          </div>
+          <div class="stat-pill">
+            <div id="statBurstiness" class="val">-</div>
+            <div class="lbl">Burstiness</div>
+          </div>
+          <div class="stat-pill">
+            <div id="statChunks" class="val">-</div>
+            <div class="lbl">Segments</div>
+          </div>
+          <div class="stat-pill">
+            <div id="statLatency" class="val">-</div>
+            <div class="lbl">Total Latency</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE PANEL -->
+    <div id="imagePanel" style="display:none;">
+      <div class="card">
+        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 12px;">UPLOAD IMAGE FOR ARTIFACT & C2PA ANALYSIS</label>
+        <div id="dropZone" class="drop-zone" onclick="document.getElementById('fileInput').click()">
+          <div style="font-size: 32px; margin-bottom: 10px;">📸</div>
+          <p style="font-size: 14px; font-weight: 500;">Drag & drop image here, or <span style="color:var(--primary);">browse</span></p>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports JPEG, PNG, WebP (processed via Sieve 384x384)</p>
+          <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+        </div>
+
+        <div id="previewBox" class="preview-container">
+          <img id="previewImg" class="preview-img" alt="preview">
+          <div>
+            <div id="previewName" style="font-size: 13px; font-weight: 600;"></div>
+            <div id="previewSize" style="font-size: 12px; color: var(--text-muted);"></div>
+          </div>
+        </div>
+
+        <button id="analyzeImageBtn" class="btn-primary" onclick="analyzeImage()" disabled>
+          <span>Analyze Image</span>
+        </button>
+      </div>
+
+      <!-- IMAGE RESULTS CARD -->
+      <div id="imageResultCard" class="card results-card">
+        <div class="verdict-header">
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">CLASSIFICATION VERDICT</div>
+            <div id="imageVerdictBadge" class="verdict-badge"></div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">AI PROBABILITY</div>
+            <div id="imageScoreDisplay" style="font-size: 24px; font-weight: 800;"></div>
+          </div>
+        </div>
+
+        <div class="meter-container">
+          <div class="meter-labels">
+            <span>Human/Authentic</span>
+            <span>Operating Threshold: 65%</span>
+            <span>AI-Synthesized</span>
+          </div>
+          <div class="meter-bar">
+            <div id="imageMeterFill" class="meter-fill"></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-pill">
+            <div id="statC2pa" class="val">-</div>
+            <div class="lbl">C2PA Manifest</div>
+          </div>
+          <div class="stat-pill">
+            <div id="statImgPreproc" class="val">-</div>
+            <div class="lbl">Preprocessing</div>
+          </div>
+          <div class="stat-pill">
+            <div id="statImgInfer" class="val">-</div>
+            <div class="lbl">ONNX Inference</div>
+          </div>
+          <div class="stat-pill">
+            <div id="statImgTotal" class="val">-</div>
+            <div class="lbl">Total Time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedImageFile = null;
+
+    function switchTab(tab) {
+      const textBtn = document.getElementById('textTabBtn');
+      const imgBtn = document.getElementById('imageTabBtn');
+      const textPanel = document.getElementById('textPanel');
+      const imagePanel = document.getElementById('imagePanel');
+
+      if (tab === 'text') {
+        textBtn.classList.add('active');
+        imgBtn.classList.remove('active');
+        textPanel.style.display = 'block';
+        imagePanel.style.display = 'none';
+      } else {
+        imgBtn.classList.add('active');
+        textBtn.classList.remove('active');
+        textPanel.style.display = 'none';
+        imagePanel.style.display = 'block';
+      }
+    }
+
+    function updateTextCounts() {
+      const val = document.getElementById('inputText').value.trim();
+      const words = val ? val.split(/\s+/).length : 0;
+      document.getElementById('wordCount').innerText = `${words} words`;
+      document.getElementById('charCount').innerText = `${val.length} characters`;
+    }
+
+    function loadSample(type) {
+      const ta = document.getElementById('inputText');
+      if (type === 'ai') {
+        ta.value = "Artificial intelligence represents a transformative paradigm shift across numerous technological disciplines. In the contemporary digital ecosystem, deep neural architectures facilitate unprecedented capabilities in natural language synthesis, automated reasoning, and pattern recognition. The systematic integration of transformer models enables multifaceted content generation with remarkable stylistic consistency and grammatical precision.";
+      } else {
+        ta.value = "I went down to the local hardware store yesterday morning because our old kitchen faucet started leaking again. My brother told me to grab some Teflon tape and a wrench, but of course they were out of the standard 3/4-inch size! Ended up improvising with an old washer from the garage.";
+      }
+      updateTextCounts();
+    }
+
+    async function analyzeText() {
+      const text = document.getElementById('inputText').value;
+      if (!text.trim()) return alert('Please enter text to analyze!');
+
+      const btn = document.getElementById('analyzeTextBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div><span>Evaluating Token Patterns...</span>';
+
+      try {
+        const res = await fetch('/api/detect/text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        const data = await res.json();
+
+        // Render Results
+        const card = document.getElementById('textResultCard');
+        card.style.display = 'block';
+
+        const badge = document.getElementById('textVerdictBadge');
+        badge.className = 'verdict-badge';
+
+        if (data.verdict === 'likely_ai') {
+          badge.classList.add('verdict-ai');
+          badge.innerText = 'LIKELY AI-GENERATED';
+        } else if (data.verdict === 'likely_human') {
+          badge.classList.add('verdict-human');
+          badge.innerText = 'LIKELY HUMAN-CREATED';
+        } else if (data.verdict === 'insufficient_evidence') {
+          badge.classList.add('verdict-uncertain');
+          badge.innerText = 'INSUFFICIENT EVIDENCE';
+        } else {
+          badge.classList.add('verdict-uncertain');
+          badge.innerText = 'UNCERTAIN';
+        }
+
+        const pct = Math.round(data.confidence * 100);
+        document.getElementById('textScoreDisplay').innerText = `${pct}%`;
+
+        const fill = document.getElementById('textMeterFill');
+        fill.style.width = `${pct}%`;
+        fill.style.background = pct >= 50 ? 'var(--ai-color)' : 'var(--human-color)';
+
+        // Warnings
+        const warnBanner = document.getElementById('textWarning');
+        if (data.diagnostics?.warning) {
+          warnBanner.style.display = 'flex';
+          warnBanner.innerText = `⚠️ ${data.diagnostics.warning}`;
+        } else {
+          warnBanner.style.display = 'none';
+        }
+
+        // Stats
+        document.getElementById('statPerplexity').innerText = (data.perplexity || 0).toFixed(1);
+        document.getElementById('statBurstiness').innerText = (data.burstiness || 0).toFixed(1);
+        document.getElementById('statChunks').innerText = data.segments ? data.segments.length : 1;
+        document.getElementById('statLatency').innerText = `${Math.round(data.timing?.totalMs || 0)} ms`;
+
+      } catch (err) {
+        alert('Analysis error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Analyze Text</span>';
+      }
+    }
+
+    // Drag and drop image handlers
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files?.length) {
+        setFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleFileSelect(e) {
+      if (e.target.files?.length) {
+        setFile(e.target.files[0]);
+      }
+    }
+
+    function setFile(file) {
+      selectedImageFile = file;
+      const previewBox = document.getElementById('previewBox');
+      const previewImg = document.getElementById('previewImg');
+      const previewName = document.getElementById('previewName');
+      const previewSize = document.getElementById('previewSize');
+
+      previewName.innerText = file.name;
+      previewSize.innerText = `${(file.size / 1024).toFixed(1)} KB`;
+      previewImg.src = URL.createObjectURL(file);
+      previewBox.style.display = 'flex';
+
+      document.getElementById('analyzeImageBtn').disabled = false;
+    }
+
+    async function analyzeImage() {
+      if (!selectedImageFile) return;
+
+      const btn = document.getElementById('analyzeImageBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div><span>Inspecting Artifacts & C2PA...</span>';
+
+      try {
+        const res = await fetch('/api/detect/image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: selectedImageFile
+        });
+        const data = await res.json();
+
+        const card = document.getElementById('imageResultCard');
+        card.style.display = 'block';
+
+        const badge = document.getElementById('imageVerdictBadge');
+        badge.className = 'verdict-badge';
+
+        if (data.verdict === 'likely_ai') {
+          badge.classList.add('verdict-ai');
+          badge.innerText = 'LIKELY AI-GENERATED';
+        } else if (data.verdict === 'likely_human') {
+          badge.classList.add('verdict-human');
+          badge.innerText = 'LIKELY AUTHENTIC PHOTO';
+        } else {
+          badge.classList.add('verdict-uncertain');
+          badge.innerText = 'UNCERTAIN';
+        }
+
+        const pct = Math.round(data.confidence * 100);
+        document.getElementById('imageScoreDisplay').innerText = `${pct}%`;
+
+        const fill = document.getElementById('imageMeterFill');
+        fill.style.width = `${pct}%`;
+        fill.style.background = pct >= 65 ? 'var(--ai-color)' : 'var(--human-color)';
+
+        // Provenance & timing
+        const c2paStatus = data.provenance?.status || 'none';
+        document.getElementById('statC2pa').innerText = c2paStatus === 'validated_ai' ? 'Validated AI' : (c2paStatus === 'none' ? 'None' : c2paStatus);
+        document.getElementById('statImgPreproc').innerText = `${Math.round(data.timing?.preprocessingMs || 0)} ms`;
+        document.getElementById('statImgInfer').innerText = `${Math.round(data.timing?.inferenceMs || 0)} ms`;
+        document.getElementById('statImgTotal').innerText = `${Math.round(data.timing?.totalMs || 0)} ms`;
+
+      } catch (err) {
+        alert('Image detection error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Analyze Image</span>';
+      }
+    }
+  </script>
+</body>
+</html>
