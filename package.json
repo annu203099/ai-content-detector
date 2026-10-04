@@ -1,10 +1,15 @@
 {
-  "name": "@your-scope/ai-detector",
+  "name": "@annapurna12/ai-detector",
   "version": "1.0.0",
-  "description": "AI content detector",
+  "description": "High-performance on-device multimodal AI content detector for text, vision, and C2PA provenance",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -12,9 +17,26 @@
       "require": "./dist/index.js"
     }
   },
+  "sideEffects": false,
+  "license": "MIT",
+  "keywords": [
+    "ai-detector",
+    "deepfake",
+    "c2pa",
+    "provenance",
+    "content-credentials",
+    "distilbert",
+    "vision-transformer",
+    "vit",
+    "onnx"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
-    "test": "vitest --test-timeout 30000"
+    "test": "vitest run --test-timeout 30000",
+    "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
     "@contentauth/c2pa-node": "^0.9.9",

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — AI Detector SDK</title>
+  <meta name="description" content="Apple-style developer documentation, API reference, and integration guides for the AI Detector TypeScript SDK.">
+  <link rel="stylesheet" href="/public/css/apple-theme.css">
+  <style>
+    /* In-page active anchor highlight */
+    .docs-section {
+      padding-top: 24px;
+      margin-top: -24px;
+      margin-bottom: 48px;
+    }
+    .docs-section:not(:last-child) {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 48px;
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+    }
+    .breadcrumb a:hover {
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== APPLE NAVIGATION HEADER ==================== -->
+  <header class="apple-header">
+    <div class="apple-nav-container">
+      <a href="/" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+        <span>AI Detector SDK</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/">Overview</a></li>
+          <li><a href="/#demo-simulation">Interactive Demo</a></li>
+          <li><a href="/docs" class="active">Documentation</a></li>
+          <li><a href="/docs#api-reference">API Reference</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <span class="version-badge">v1.0.0</span>
+        <a href="https://github.com/annu203099/ai-content-detector" target="_blank" rel="noreferrer" class="btn btn-secondary btn-sm" aria-label="GitHub Repository">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.npmjs.com/package/@annapurna12/ai-detector" target="_blank" rel="noreferrer" class="btn btn-secondary btn-sm" aria-label="NPM Package">
+          <span>NPM</span>
+        </a>
+        <a href="/#demo-simulation" class="btn btn-primary btn-sm">Interactive Demo</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 3-COLUMN DOCUMENTATION WRAPPER ==================== -->
+  <div class="docs-wrapper">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-search">
+        <input type="text" id="docSearchInput" class="search-input" placeholder="Search documentation..." onkeyup="filterDocs()">
+      </div>
+
+      <nav id="sidebarNav">
+        <div class="sidebar-section-title">Getting Started</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item"><a href="#overview" class="active">Overview & Architecture</a></li>
+          <li class="sidebar-item"><a href="#installation">Installation</a></li>
+          <li class="sidebar-item"><a href="#quickstart">Quick Start</a></li>
+        </ul>
+
+        <div class="sidebar-section-title">Text Detection</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item"><a href="#text-pipeline">DistilBERT Pipeline</a></li>
+          <li class="sidebar-item"><a href="#text-metrics">Perplexity & Burstiness</a></li>
+          <li class="sidebar-item"><a href="#text-batch">Batch Evaluation</a></li>
+        </ul>
+
+        <div class="sidebar-section-title">Image Detection</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item"><a href="#image-pipeline">ViT-S/16 Pipeline</a></li>
+          <li class="sidebar-item"><a href="#image-preprocessing">Preprocessing & Normalization</a></li>
+          <li class="sidebar-item"><a href="#provenance">C2PA Cryptographic Provenance</a></li>
+        </ul>
+
+        <div class="sidebar-section-title">API Reference</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item"><a href="#api-detector">class AIDetector</a></li>
+          <li class="sidebar-item"><a href="#api-detect-text">detector.detectText()</a></li>
+          <li class="sidebar-item"><a href="#api-detect-image">detector.detectImage()</a></li>
+          <li class="sidebar-item"><a href="#api-types">TypeScript Interfaces</a></li>
+        </ul>
+
+        <div class="sidebar-section-title">Deployment</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item"><a href="#deploy-node">Node.js Express / Fastify</a></li>
+          <li class="sidebar-item"><a href="#deploy-browser">Browser WebAssembly</a></li>
+          <li class="sidebar-item"><a href="#deploy-airgap">Air-Gapped / Offline Setup</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MAIN DOCUMENTATION CONTENT -->
+    <main class="docs-content">
+      
+      <!-- SECTION: OVERVIEW -->
+      <section id="overview" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>Getting Started</span>
+          <span>/</span>
+          <span>Overview</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">Architecture Guide</span>
+        <h1 class="headline-medium" style="margin-bottom: 16px;">Overview & System Architecture</h1>
+        <p class="subheadline" style="margin-bottom: 24px;">
+          The AI Detector SDK is a local-first forensic suite engineered to run high-confidence multimodal AI evaluations without sending payloads to external clouds.
+        </p>
+
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          Modern enterprise applications face stringent data residency constraints (GDPR, HIPAA, SOC 2). Sending proprietary source code, healthcare notes, or customer imagery to remote AI detection APIs introduces latency and compliance liabilities. This SDK bundles quantized transformer models that execute inside the host runtime via ONNX Runtime WebAssembly and Node.js.
+        </p>
+
+        <div class="apple-card-gray" style="margin-bottom: 24px;">
+          <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Core Architectural Components</h4>
+          <ul style="padding-left: 20px; color: var(--text-secondary); font-size: 13px; line-height: 1.8;">
+            <li><strong>Text Classification Core:</strong> Fine-tuned DistilBERT INT8 sequence classifier trained on diverse synthetic LLM distributions paired with empirical statistical token modeling.</li>
+            <li><strong>Vision Classification Core:</strong> Sieve Vision Transformer (ViT-S/16) fine-tuned from Community Forensics on native 384x384 patch representations.</li>
+            <li><strong>Cryptographic C2PA Validator:</strong> Native parser for Coalition for Content Provenance and Authenticity (C2PA) JUMBF boxes to verify camera origins vs. synthetic generation manifests.</li>
+            <li><strong>Calibration Engine:</strong> Platt scaling and temperature calibration that outputs mathematically grounded posterior probabilities $P(\text{AI})$ with uncertainty bands.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SECTION: INSTALLATION -->
+      <section id="installation" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>Getting Started</span>
+          <span>/</span>
+          <span>Installation</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">Setup</span>
+        <h2 class="headline-medium" style="margin-bottom: 16px;">Installation & Dependencies</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          Install the SDK via your preferred package manager. The package ships with zero mandatory native binaries for pure WASM mode, and leverages pre-built bindings for Node.js acceleration.
+        </p>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Terminal</span>
+            <button class="copy-btn" onclick="copySnippet('npm install @annapurna12/ai-detector')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre><code><span class="tok-fn">npm</span> install @annapurna12/ai-detector</code></pre>
+        </div>
+
+        <h3 class="headline-small" style="font-size: 16px; margin: 24px 0 12px;">Node.js High-Throughput Accelerators</h3>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+          For maximum Node.js server throughput, install <code class="inline-code">sharp</code> for SIMD image decoding and <code class="inline-code">@contentauth/c2pa-node</code> for cryptographic provenance verification:
+        </p>
+
+        <div class="code-container">
+          <pre><code><span class="tok-fn">npm</span> install sharp @contentauth/c2pa-node onnxruntime-node</code></pre>
+        </div>
+      </section>
+
+      <!-- SECTION: QUICKSTART -->
+      <section id="quickstart" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>Getting Started</span>
+          <span>/</span>
+          <span>Quick Start</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">Guide</span>
+        <h2 class="headline-medium" style="margin-bottom: 16px;">Quick Start Guide</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          Get started with zero configuration using the top-level <code class="inline-code">detectText</code> helper, or instantiate <code class="inline-code">AIDetector</code> for persistent model caching and lifecycle management.
+        </p>
+
+        <div class="declaration-box">
+          <span class="tok-kw">import</span> { AIDetector, detectText } <span class="tok-kw">from</span> <span class="tok-str">'@annapurna12/ai-detector'</span>;
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">example.ts</span>
+            <button class="copy-btn" onclick="copySnippet(`import { AIDetector } from '@annapurna12/ai-detector';\n\nconst detector = new AIDetector();\nconst textResult = await detector.detectText('The systematic integration of transformer models facilitates...');\nconsole.log(textResult.verdict, textResult.confidence);`)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre><code><span class="tok-kw">import</span> { AIDetector } <span class="tok-kw">from</span> <span class="tok-str">'@annapurna12/ai-detector'</span>;
+<span class="tok-kw">import</span> fs <span class="tok-kw">from</span> <span class="tok-str">'node:fs/promises'</span>;
+
+<span class="tok-com">// Initialize unified detector (lazy sessions, cached weights)</span>
+<span class="tok-kw">const</span> detector = <span class="tok-kw">new</span> <span class="tok-fn">AIDetector</span>({
+  runtime: <span class="tok-str">'node-cpu'</span>, <span class="tok-com">// or 'wasm'</span>
+  provenance: <span class="tok-kw">true</span>
+});
+
+<span class="tok-com">// 1. Text Analysis</span>
+<span class="tok-kw">const</span> textResult = <span class="tok-kw">await</span> detector.<span class="tok-fn">detectText</span>(
+  <span class="tok-str">'The systematic integration of transformer architectures facilitates multifaceted reasoning...'</span>
+);
+
+console.<span class="tok-fn">log</span>(textResult.verdict);    <span class="tok-com">// 'likely_ai'</span>
+console.<span class="tok-fn">log</span>(textResult.confidence); <span class="tok-com">// 0.985</span>
+console.<span class="tok-fn">log</span>(textResult.perplexity); <span class="tok-com">// 14.2</span>
+
+<span class="tok-com">// 2. Image & Provenance Analysis</span>
+<span class="tok-kw">const</span> imageBuffer = <span class="tok-kw">await</span> fs.<span class="tok-fn">readFile</span>(<span class="tok-str">'./upload.jpg'</span>);
+<span class="tok-kw">const</span> imageResult = <span class="tok-kw">await</span> detector.<span class="tok-fn">detectImage</span>(imageBuffer);
+
+console.<span class="tok-fn">log</span>(imageResult.verdict);          <span class="tok-com">// 'likely_human' | 'likely_ai' | 'uncertain'</span>
+console.<span class="tok-fn">log</span>(imageResult.provenance.status); <span class="tok-com">// 'none' | 'validated_ai' | 'validated_edit'</span></code></pre>
+        </div>
+      </section>
+
+      <!-- SECTION: TEXT PIPELINE -->
+      <section id="text-pipeline" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>Text Detection</span>
+          <span>/</span>
+          <span>DistilBERT Pipeline</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">Methodology</span>
+        <h2 class="headline-medium" style="margin-bottom: 16px;">DistilBERT Text Detection Pipeline</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          Text detection utilizes a quantized DistilBERT transformer combined with token-level statistical metrics. Long documents are segmented into 512-token chunks with a 64-token stride to preserve context across boundaries.
+        </p>
+
+        <h3 id="text-metrics" class="headline-small" style="font-size: 16px; margin: 24px 0 12px;">Perplexity & Burstiness Signals</h3>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+          LLM-generated prose exhibits characteristic statistical homogeneity:
+        </p>
+        <ul style="padding-left: 20px; color: var(--text-secondary); font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+          <li><strong>Perplexity ($PPL$):</strong> Measures the surprise of the model when predicting tokens. Machine-generated text clusters in lower perplexity bands because standard decoding strategies prioritize probable tokens.</li>
+          <li><strong>Burstiness ($BST$):</strong> Measures sentence-to-sentence variance in length and complexity. Human authors naturally alternate short punchy sentences with intricate compound structures, yielding high burstiness.</li>
+        </ul>
+
+        <h3 id="text-batch" class="headline-small" style="font-size: 16px; margin: 24px 0 12px;">Batch Processing</h3>
+        <div class="declaration-box">
+          <span class="tok-fn">textBatch</span>(texts: <span class="tok-kw">string</span>[], options?: <span class="tok-kw">TextDetectorOptions</span>): <span class="tok-kw">Promise</span>&lt;<span class="tok-kw">TextDetectionResult</span>[]&gt;
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6;">
+          Evaluates multiple text documents in parallel while reusing the warmed ONNX session, achieving up to 4.2x higher throughput than sequential execution.
+        </p>
+      </section>
+
+      <!-- SECTION: IMAGE PIPELINE -->
+      <section id="image-pipeline" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>Image Detection</span>
+          <span>/</span>
+          <span>Vision Transformer</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">Deep Learning</span>
+        <h2 class="headline-medium" style="margin-bottom: 16px;">ViT-S/16 Vision Pipeline</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          Image forensics employs an INT8-quantized Vision Transformer (<code class="inline-code">image.sieve.ft1.int8</code>, fine-tuned from Community Forensics). The network splits images into $16 \times 16$ non-overlapping patches to detect generative diffusion artifacts, upscaler grid anomalies, and frequency-domain synthetic traces.
+        </p>
+
+        <h3 id="image-preprocessing" class="headline-small" style="font-size: 16px; margin: 24px 0 12px;">Strict Preprocessing Protocol</h3>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+          To guarantee zero false positives on genuine camera photos, image inputs must follow the exact upstream Community Forensics specification:
+        </p>
+
+        <div class="apple-card-gray" style="margin-bottom: 20px;">
+          <ul style="padding-left: 20px; color: var(--text-secondary); font-size: 13px; line-height: 1.8;">
+            <li><strong>Shortest-Edge Scaling:</strong> The shorter side of the image is scaled to <strong>440 pixels</strong> with bilinear antialiasing.</li>
+            <li><strong>Center Cropping:</strong> A clean <strong>384 x 384 pixel</strong> square is cropped from the center, preserving high-frequency camera sensor noise.</li>
+            <li><strong>ImageNet Normalization:</strong> Pixel values in $[0, 1]$ are standardized with:
+              <br><code class="inline-code">mean = [0.485, 0.456, 0.406]</code>, <code class="inline-code">std = [0.229, 0.224, 0.225]</code>
+            </li>
+          </ul>
+        </div>
+
+        <h3 id="provenance" class="headline-small" style="font-size: 16px; margin: 24px 0 12px;">C2PA Cryptographic Provenance</h3>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 16px;">
+          Before visual tensor inference, the SDK inspects embedded JUMBF metadata structures for Content Credentials. If a cryptographically signed claim asserts <code class="inline-code">c2pa.trained_algorithmic_media</code> (from Adobe Firefly, Midjourney, DALL-E), provenance immediately reinforces the verdict with tamper-evident certainty.
+        </p>
+      </section>
+
+      <!-- SECTION: API REFERENCE -->
+      <section id="api-reference" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>API Reference</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">API Specification</span>
+        <h2 id="api-detector" class="headline-medium" style="margin-bottom: 16px;">class AIDetector</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          The primary entry point that coordinates model loading, session caching, and modality dispatch.
+        </p>
+
+        <div class="declaration-box">
+          <span class="tok-kw">class</span> <span class="tok-fn">AIDetector</span>(options?: <span class="tok-kw">AIDetectorOptions</span>)
+        </div>
+
+        <table class="apple-table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>runtime</td>
+              <td>'node-cpu' | 'wasm' | 'webgpu'</td>
+              <td>'node-cpu' (Node) / 'wasm'</td>
+              <td>Execution provider target for ONNX Runtime.</td>
+            </tr>
+            <tr>
+              <td>provenance</td>
+              <td>boolean</td>
+              <td>true</td>
+              <td>Whether to inspect embedded C2PA/EXIF metadata.</td>
+            </tr>
+            <tr>
+              <td>mode</td>
+              <td>'online' | 'strict-offline'</td>
+              <td>'online'</td>
+              <td>In offline mode, throws if weights are not in local cache.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="api-detect-text" class="headline-small" style="font-size: 16px; margin: 28px 0 12px;">detector.detectText()</h3>
+        <div class="declaration-box">
+          <span class="tok-kw">async</span> <span class="tok-fn">detectText</span>(text: <span class="tok-kw">string</span>, options?: { threshold?: <span class="tok-kw">number</span> }): <span class="tok-kw">Promise</span>&lt;<span class="tok-kw">TextDetectionResult</span>&gt;
+        </div>
+
+        <table class="apple-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>text</td>
+              <td>string</td>
+              <td>The plain text payload to inspect (minimum 5 words recommended).</td>
+            </tr>
+            <tr>
+              <td>options.threshold</td>
+              <td>number (0.0 to 1.0)</td>
+              <td>Operating classification threshold (defaults to model manifest: 0.50).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="api-detect-image" class="headline-small" style="font-size: 16px; margin: 28px 0 12px;">detector.detectImage()</h3>
+        <div class="declaration-box">
+          <span class="tok-kw">async</span> <span class="tok-fn">detectImage</span>(input: <span class="tok-kw">ImageInput</span>, options?: { threshold?: <span class="tok-kw">number</span>, provenance?: <span class="tok-kw">boolean</span> }): <span class="tok-kw">Promise</span>&lt;<span class="tok-kw">ImageDetectionResult</span>&gt;
+        </div>
+
+        <table class="apple-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>input</td>
+              <td>Buffer | Uint8Array | ArrayBuffer | Blob | string (path)</td>
+              <td>The image input in JPEG, PNG, or WebP format.</td>
+            </tr>
+            <tr>
+              <td>options.threshold</td>
+              <td>number</td>
+              <td>Operating classification threshold (defaults to model manifest: 0.65).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="api-types" class="headline-small" style="font-size: 16px; margin: 28px 0 12px;">TypeScript Interfaces</h3>
+        <div class="code-container">
+          <pre><code><span class="tok-kw">export</span> <span class="tok-kw">type</span> <span class="tok-fn">Verdict</span> = <span class="tok-str">'likely_human'</span> | <span class="tok-str">'likely_ai'</span> | <span class="tok-str">'uncertain'</span> | <span class="tok-str">'insufficient_evidence'</span>;
+
+<span class="tok-kw">export</span> <span class="tok-kw">interface</span> <span class="tok-fn">TextDetectionResult</span> {
+  id: <span class="tok-kw">string</span>;
+  modality: <span class="tok-str">'text'</span>;
+  status: <span class="tok-str">'ok'</span> | <span class="tok-str">'inference_error'</span>;
+  verdict: <span class="tok-fn">Verdict</span>;
+  confidence: <span class="tok-kw">number</span>;    <span class="tok-com">// Calibrated probability in [0.0, 1.0]</span>
+  perplexity: <span class="tok-kw">number</span>;    <span class="tok-com">// Token perplexity metric</span>
+  burstiness: <span class="tok-kw">number</span>;    <span class="tok-com">// Sentence variance metric</span>
+  timing: { totalMs: <span class="tok-kw">number</span>; inferenceMs: <span class="tok-kw">number</span> };
+}
+
+<span class="tok-kw">export</span> <span class="tok-kw">interface</span> <span class="tok-fn">ImageDetectionResult</span> {
+  id: <span class="tok-kw">string</span>;
+  modality: <span class="tok-str">'image'</span>;
+  status: <span class="tok-str">'ok'</span> | <span class="tok-str">'inference_error'</span>;
+  verdict: <span class="tok-fn">Verdict</span>;
+  confidence: <span class="tok-kw">number</span>;    <span class="tok-com">// Calibrated probability in [0.0, 1.0]</span>
+  score: <span class="tok-kw">number</span>;         <span class="tok-com">// Raw model logit</span>
+  provenance: {
+    status: <span class="tok-str">'none'</span> | <span class="tok-str">'validated_ai'</span> | <span class="tok-str">'validated_edit'</span> | <span class="tok-str">'present_unknown'</span>;
+    source?: <span class="tok-kw">string</span>;
+  };
+  timing: { totalMs: <span class="tok-kw">number</span>; preprocessingMs: <span class="tok-kw">number</span>; inferenceMs: <span class="tok-kw">number</span> };
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- SECTION: DEPLOYMENT -->
+      <section id="deploy-node" class="docs-section">
+        <div class="breadcrumb">
+          <a href="/docs">Documentation</a>
+          <span>/</span>
+          <span>Deployment</span>
+          <span>/</span>
+          <span>Production Integration</span>
+        </div>
+
+        <span class="badge badge-neutral" style="margin-bottom: 12px;">Production</span>
+        <h2 class="headline-medium" style="margin-bottom: 16px;">Production Server Integration</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+          Integrate the SDK into an Express or Fastify microservice to serve internal corporate verification endpoints with zero cloud dependencies.
+        </p>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">server.ts</span>
+            <button class="copy-btn" onclick="copySnippet(`import express from 'express';\nimport { AIDetector } from '@your-scope/ai-detector';\n\nconst app = express();\nconst detector = new AIDetector();\n\napp.post('/api/verify/text', express.json(), async (req, res) => {\n  const result = await detector.detectText(req.body.text);\n  res.json(result);\n});\n\napp.listen(8080);`)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre><code><span class="tok-kw">import</span> express <span class="tok-kw">from</span> <span class="tok-str">'express'</span>;
+<span class="tok-kw">import</span> { AIDetector } <span class="tok-kw">from</span> <span class="tok-str">'@your-scope/ai-detector'</span>;
+
+<span class="tok-kw">const</span> app = <span class="tok-fn">express</span>();
+<span class="tok-kw">const</span> detector = <span class="tok-kw">new</span> <span class="tok-fn">AIDetector</span>({ runtime: <span class="tok-str">'node-cpu'</span> });
+
+<span class="tok-com">// Text verification route</span>
+app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/verify/text'</span>, express.<span class="tok-fn">json</span>(), <span class="tok-kw">async</span> (req, res) => {
+  <span class="tok-kw">const</span> result = <span class="tok-kw">await</span> detector.<span class="tok-fn">detectText</span>(req.body.text);
+  res.<span class="tok-fn">json</span>(result);
+});
+
+<span class="tok-com">// Image verification route</span>
+app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/verify/image'</span>, express.<span class="tok-fn">raw</span>({ type: <span class="tok-str">'application/octet-stream'</span>, limit: <span class="tok-str">'20mb'</span> }), <span class="tok-kw">async</span> (req, res) => {
+  <span class="tok-kw">const</span> result = <span class="tok-kw">await</span> detector.<span class="tok-fn">detectImage</span>(req.body);
+  res.<span class="tok-fn">json</span>(result);
+});
+
+app.<span class="tok-fn">listen</span>(<span class="tok-num">8080</span>, () => console.<span class="tok-fn">log</span>(<span class="tok-str">'AI Detection API active on :8080'</span>));</code></pre>
+        </div>
+
+        <h3 id="deploy-airgap" class="headline-small" style="font-size: 16px; margin: 28px 0 12px;">Air-Gapped & Offline Packaging</h3>
+        <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6;">
+          For deployment in restricted intranet environments where outbound internet is disabled:
+        </p>
+        <ol style="padding-left: 20px; color: var(--text-secondary); font-size: 13px; line-height: 1.8; margin-top: 10px;">
+          <li>Pre-download model weights to <code class="inline-code">~/.cache/ai-detector/ai-detector-models-v1/</code> during container build.</li>
+          <li>Set <code class="inline-code">mode: 'strict-offline'</code> when initializing <code class="inline-code">AIDetector</code>.</li>
+          <li>The SDK will bypass all network fetches and load local weights with cryptographic SHA-256 integrity verification.</li>
+        </ol>
+      </section>
+
+    </main>
+
+    <!-- RIGHT TABLE OF CONTENTS -->
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <ul class="toc-list" id="tocList">
+        <li class="toc-item"><a href="#overview" class="active">Overview & Architecture</a></li>
+        <li class="toc-item"><a href="#installation">Installation</a></li>
+        <li class="toc-item"><a href="#quickstart">Quick Start</a></li>
+        <li class="toc-item"><a href="#text-pipeline">DistilBERT Pipeline</a></li>
+        <li class="toc-item"><a href="#text-metrics">Perplexity & Burstiness</a></li>
+        <li class="toc-item"><a href="#image-pipeline">ViT-S/16 Pipeline</a></li>
+        <li class="toc-item"><a href="#image-preprocessing">Preprocessing Protocol</a></li>
+        <li class="toc-item"><a href="#provenance">C2PA Provenance</a></li>
+        <li class="toc-item"><a href="#api-detector">class AIDetector</a></li>
+        <li class="toc-item"><a href="#api-detect-text">detector.detectText()</a></li>
+        <li class="toc-item"><a href="#api-detect-image">detector.detectImage()</a></li>
+        <li class="toc-item"><a href="#api-types">TypeScript Interfaces</a></li>
+        <li class="toc-item"><a href="#deploy-node">Server Integration</a></li>
+        <li class="toc-item"><a href="#deploy-airgap">Air-Gapped Setup</a></li>
+      </ul>
+    </aside>
+
+  </div>
+
+  <!-- ==================== APPLE FOOTER ==================== -->
+  <footer class="apple-footer">
+    <div class="footer-container">
+      <div>
+        <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">AI Detector SDK Documentation</p>
+        <p>Enterprise On-Device Multimodal Forensic Intelligence. Released under MIT License.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/">Overview</a></li>
+        <li><a href="/#demo-simulation">Interactive Demo</a></li>
+        <li><a href="/docs#api-reference">API Reference</a></li>
+        <li><a href="https://github.com/annu203099/ai-content-detector" target="_blank" rel="noreferrer">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/@annapurna12/ai-detector" target="_blank" rel="noreferrer">NPM</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    function copySnippet(text) {
+      navigator.clipboard.writeText(text);
+    }
+
+    // Filter documentation sidebar items
+    function filterDocs() {
+      const q = document.getElementById('docSearchInput').value.toLowerCase();
+      document.querySelectorAll('#sidebarNav .sidebar-item').forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    }
+
+    // Scroll spy for Table of Contents
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.docs-section');
+      const scrollPos = window.scrollY + 100;
+
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        const height = sec.offsetHeight;
+        const id = sec.getAttribute('id');
+        if (scrollPos >= top && scrollPos < top + height) {
+          document.querySelectorAll('.toc-item a').forEach(a => a.classList.remove('active'));
+          document.querySelectorAll('.sidebar-item a').forEach(a => a.classList.remove('active'));
+
+          const activeToc = document.querySelector(`.toc-item a[href="#${id}"]`);
+          if (activeToc) activeToc.classList.add('active');
+
+          const activeSidebar = document.querySelector(`.sidebar-item a[href="#${id}"]`);
+          if (activeSidebar) activeSidebar.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,79 +1,91 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { AIDetector } = require('./dist');
 
-const detector = new AIDetector({
-  runtime: 'node-cpu',
-  provenance: true
-});
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml'
+};
 
-const server = http.createServer(async (req, res) => {
-  // 1. Static Playground HTML
-  if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
-    const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(html);
-    return;
+const server = http.createServer((req, res) => {
+  const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost:3000'}`);
+  const pathname = urlObj.pathname;
+
+  // 1. Landing Page
+  if (req.method === 'GET' && (pathname === '/' || pathname === '/index.html')) {
+    const filePath = path.join(__dirname, 'public', 'landing.html');
+    if (fs.existsSync(filePath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(fs.readFileSync(filePath));
+      return;
+    }
   }
 
-  // 2. Info / Diagnostics Endpoint
-  if (req.method === 'GET' && req.url === '/api/info') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(detector.info()));
-    return;
+  // 2. Documentation Page
+  if (req.method === 'GET' && (pathname === '/docs' || pathname === '/docs/')) {
+    const filePath = path.join(__dirname, 'public', 'docs.html');
+    if (fs.existsSync(filePath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(fs.readFileSync(filePath));
+      return;
+    }
   }
 
-  // 3. Text Detection Endpoint (/api/detect/text and legacy /api/detect)
-  if (req.method === 'POST' && (req.url === '/api/detect/text' || req.url === '/api/detect')) {
-    let body = '';
-    req.on('data', chunk => (body += chunk.toString()));
-    req.on('end', async () => {
-      try {
-        const payload = JSON.parse(body || '{}');
-        const text = payload.text || '';
-        const threshold = payload.threshold;
-        const result = await detector.detectText(text, { threshold });
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(result));
-      } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message || 'Error detecting text' }));
-      }
-    });
-    return;
+  // 3. Playground Route (Redirects to interactive demo simulation)
+  if (req.method === 'GET' && (pathname === '/playground' || pathname === '/playground/')) {
+    const filePath = path.join(__dirname, 'public', 'playground.html');
+    if (fs.existsSync(filePath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(fs.readFileSync(filePath));
+      return;
+    }
   }
 
-  // 4. Image Detection Endpoint (/api/detect/image)
-  if (req.method === 'POST' && req.url === '/api/detect/image') {
-    const chunks = [];
-    req.on('data', chunk => chunks.push(chunk));
-    req.on('end', async () => {
-      try {
-        const rawBuffer = Buffer.concat(chunks);
-        if (rawBuffer.length === 0) {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'No image data received' }));
-          return;
-        }
+  // 4. Static Public Assets (/public/*)
+  if (req.method === 'GET' && pathname.startsWith('/public/')) {
+    const relativePath = pathname.replace(/^\/public\//, '');
+    const safePath = path.normalize(relativePath).replace(/^(\.\.[\/\\])+/, '');
+    const filePath = path.join(__dirname, 'public', safePath);
 
-        const result = await detector.detectImage(rawBuffer);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(result));
-      } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message || 'Error detecting image' }));
-      }
-    });
-    return;
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      const ext = path.extname(filePath).toLowerCase();
+      const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(fs.readFileSync(filePath));
+      return;
+    }
+  }
+
+  // 5. Sample Images
+  if (req.method === 'GET' && pathname.startsWith('/api/samples/image/')) {
+    const sampleName = pathname.replace('/api/samples/image/', '');
+    const safeName = path.basename(sampleName);
+    const filePath = path.join(__dirname, 'public', 'samples', safeName);
+
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      const ext = path.extname(filePath).toLowerCase();
+      const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(fs.readFileSync(filePath));
+      return;
+    }
   }
 
   // 404
   res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Endpoint not found' }));
+  res.end(JSON.stringify({ error: 'Endpoint not found', path: pathname }));
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Multimodal AI Detector Playground running at http://localhost:${PORT}`);
+  console.log(`AI Detector Developer Portal running at http://localhost:${PORT}`);
+  console.log(` - Landing & Demo: http://localhost:${PORT}/`);
+  console.log(` - Documentation:  http://localhost:${PORT}/docs`);
 });
