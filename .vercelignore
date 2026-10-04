@@ -1,0 +1,10 @@
+# Prevent Vercel from treating backend library code or build artifacts as serverless functions
+dist
+node_modules
+src
+tests
+scripts
+tsconfig.json
+tsup.config.ts
+*.onnx
+*.tgz
