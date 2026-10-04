@@ -1,10 +1,11 @@
 {
+  "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/docs", "destination": "/public/docs.html" },
-    { "source": "/docs/(.*)", "destination": "/public/docs.html" },
-    { "source": "/playground", "destination": "/public/playground.html" },
-    { "source": "/public/(.*)", "destination": "/public/$1" },
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/docs", "destination": "/docs.html" },
+    { "source": "/docs/(.*)", "destination": "/docs.html" },
+    { "source": "/playground", "destination": "/#demo-simulation" },
+    { "source": "/public/css/(.*)", "destination": "/css/$1" },
+    { "source": "/public/docs.html", "destination": "/docs.html" }
   ]
 }

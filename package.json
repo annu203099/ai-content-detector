@@ -36,6 +36,7 @@
   "scripts": {
     "build": "tsup",
     "test": "vitest run --test-timeout 30000",
+    "serve": "node scripts/dev-server.js",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {

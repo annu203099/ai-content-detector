@@ -1,0 +1,711 @@
+/* ==========================================================================
+   Apple-Style Light Design System (MNC Enterprise Developer Standard)
+   Strict Rules: Zero Gradients, Zero Emojis (SVG only), Zero Dark Theme.
+   ========================================================================== */
+
+:root {
+  /* Surface & Background */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F7;
+  --bg-tertiary: #EBEBED;
+  --bg-subtle: #FBFBFD;
+
+  /* Borders & Dividers */
+  --border-subtle: #E5E5EA;
+  --border-strong: #D2D2D7;
+  --border-focus: #0071E3;
+
+  /* Typography Colors */
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-tertiary: #86868B;
+  --text-on-accent: #FFFFFF;
+
+  /* Brand & Accent (Apple Signature Blue) */
+  --accent: #0071E3;
+  --accent-hover: #0077ED;
+  --accent-active: #0062C4;
+  --accent-subtle: #EBF5FF;
+
+  /* Status Indicators (Solid, Non-Gradient) */
+  --status-ai-bg: #FEECEB;
+  --status-ai-text: #C5221F;
+  --status-ai-border: #FAD2CF;
+
+  --status-human-bg: #E6F4EA;
+  --status-human-text: #137333;
+  --status-human-border: #CEEAD6;
+
+  --status-uncertain-bg: #FEF7E0;
+  --status-uncertain-text: #B06000;
+  --status-uncertain-border: #FEEFC3;
+
+  /* Code & Syntax Surfaces (Xcode Light) */
+  --code-bg: #F6F8FA;
+  --code-border: #E1E4E8;
+  --code-text: #24292E;
+  --code-keyword: #D73A49;
+  --code-string: #032F62;
+  --code-comment: #6A737D;
+  --code-func: #6F42C1;
+
+  /* Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", Monaco, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Layout Dimensions */
+  --nav-height: 52px;
+  --sidebar-width: 280px;
+  --toc-width: 220px;
+  --max-content-width: 1240px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* ==========================================================================
+   Apple Header & Navigation
+   ========================================================================== */
+
+.apple-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.apple-nav-container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.nav-brand svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-primary);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-primary);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.version-badge {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  padding: 3px 8px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Buttons (Solid Colors, Zero Gradients)
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+.btn-primary:active {
+  background-color: var(--accent-active);
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Typography & Sections
+   ========================================================================== */
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.headline-large {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.headline-medium {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.headline-small {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.subheadline {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Cards & Surfaces
+   ========================================================================== */
+
+.apple-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 28px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.apple-card:hover {
+  border-color: var(--border-strong);
+}
+
+.apple-card-gray {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+/* ==========================================================================
+   Code Blocks & Terminal Tabs (Xcode Light Theme)
+   ========================================================================== */
+
+.code-container {
+  background-color: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin: 16px 0;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #FAFAFA;
+  border-bottom: 1px solid var(--code-border);
+}
+
+.code-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.code-tab-btn {
+  background: none;
+  border: none;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.code-tab-btn:hover {
+  color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.code-tab-btn.active {
+  color: var(--text-primary);
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+}
+
+.copy-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  transition: all 0.15s ease;
+}
+
+.copy-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+  background-color: #FFFFFF;
+}
+
+.copy-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+pre {
+  padding: 16px;
+  overflow-x: auto;
+  line-height: 1.6;
+  color: var(--code-text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+.inline-code {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--text-primary);
+}
+
+/* Syntax Highlighting */
+.tok-kw { color: var(--code-keyword); font-weight: 600; }
+.tok-fn { color: var(--code-func); }
+.tok-str { color: var(--code-string); }
+.tok-com { color: var(--code-comment); font-style: italic; }
+.tok-num { color: #005CC5; }
+
+/* ==========================================================================
+   Apple Developer Declaration Box
+   ========================================================================== */
+
+.declaration-box {
+  background-color: var(--bg-secondary);
+  border-left: 3px solid var(--accent);
+  border-top: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+
+/* ==========================================================================
+   Structured Parameters & Return Tables
+   ========================================================================== */
+
+.apple-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.apple-table th {
+  padding: 10px 14px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-strong);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.apple-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.apple-table tr:hover td {
+  background-color: var(--bg-subtle);
+}
+
+.apple-table td:first-child {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   Badges & Verdict Status
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.badge-human {
+  background-color: var(--status-human-bg);
+  color: var(--status-human-text);
+  border-color: var(--status-human-border);
+}
+
+.badge-ai {
+  background-color: var(--status-ai-bg);
+  color: var(--status-ai-text);
+  border-color: var(--status-ai-border);
+}
+
+.badge-uncertain {
+  background-color: var(--status-uncertain-bg);
+  color: var(--status-uncertain-text);
+  border-color: var(--status-uncertain-border);
+}
+
+.badge-neutral {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+
+/* Meter / Bar (Solid Blue / Neutral, No Gradients) */
+.meter-track {
+  width: 100%;
+  height: 8px;
+  background-color: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  background-color: var(--accent);
+}
+
+.meter-fill-ai {
+  background-color: var(--status-ai-text);
+}
+
+.meter-fill-human {
+  background-color: var(--status-human-text);
+}
+
+/* ==========================================================================
+   Documentation 3-Column Layout
+   ========================================================================== */
+
+.docs-wrapper {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 32px;
+  flex: 1;
+  width: 100%;
+}
+
+.docs-sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+  padding: 32px 0;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.sidebar-search {
+  margin-bottom: 20px;
+  padding-right: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 32px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  font-size: 13px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.search-input:focus {
+  background-color: #FFFFFF;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin: 20px 0 8px 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+}
+
+.sidebar-item a {
+  display: block;
+  padding: 6px 12px;
+  margin-right: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition: all 0.12s ease;
+}
+
+.sidebar-item a:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
+
+.sidebar-item a.active {
+  color: var(--accent);
+  background-color: var(--accent-subtle);
+  font-weight: 500;
+}
+
+.docs-content {
+  flex: 1;
+  min-width: 0;
+  padding: 36px 0 64px 0;
+}
+
+.docs-toc {
+  width: var(--toc-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+  padding: 36px 0;
+  border-left: 1px solid var(--border-subtle);
+}
+
+.toc-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-left: 16px;
+}
+
+.toc-list {
+  list-style: none;
+}
+
+.toc-item a {
+  display: block;
+  padding: 4px 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border-left: 2px solid transparent;
+  transition: all 0.12s ease;
+}
+
+.toc-item a:hover {
+  color: var(--text-primary);
+}
+
+.toc-item a.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Apple Footer
+   ========================================================================== */
+
+.apple-footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding: 40px 24px;
+  margin-top: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.footer-container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+}
+
+.footer-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .docs-toc { display: none; }
+}
+
+@media (max-width: 768px) {
+  .docs-sidebar { display: none; }
+  .docs-wrapper { padding: 0 16px; }
+  .headline-large { font-size: 36px; }
+  .headline-medium { font-size: 26px; }
+  .nav-links { display: none; }
+}
