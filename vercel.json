@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "installCommand": "echo 'Static deployment - skipping dependency installation'",
   "buildCommand": "echo 'Static assets ready'",
   "outputDirectory": "public",
   "cleanUrls": true,
